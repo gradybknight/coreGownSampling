@@ -12,7 +12,7 @@ import { getTransactionsInTimePeriod } from './actions/transactionActions'
 
 const store = configureStore();
 store.dispatch(getAllKnownUsers());
-store.dispatch(setTimeBoundry(1234,''));
+store.dispatch(setTimeBoundry(1,''));
 let timePeriod = store.getState().timeBoundry;
 store.dispatch(getTransactionsInTimePeriod(timePeriod));
 

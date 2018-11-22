@@ -9,7 +9,6 @@ export default function transactionReducer(state = initialState.transactions, ac
             ];
 
         case types.GET_TRANSACTIONS_IN_TIME_PERIOD_SUCCESS:
-            console.log(action.payload);
             return [
                 ...action.payload
             ];

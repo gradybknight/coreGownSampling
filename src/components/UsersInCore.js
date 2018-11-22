@@ -4,7 +4,6 @@ import moment from 'moment'
 
 export default class UsersInCore extends React.Component {
   render() {
-    // const users = this.prop.users;
 
     return (
       <Table>
@@ -18,7 +17,7 @@ export default class UsersInCore extends React.Component {
 
         <tbody>
           {this.props.users.map((user, index) => {
-            let m = moment.unix(user.entrytimestamp);
+            let m = moment.unix(user.entrytimestamp/1000);
             let formattedTime = m.format('DD-MMM-YYYY hh:mm:ss');
             return(
               <tr key = {index}>
