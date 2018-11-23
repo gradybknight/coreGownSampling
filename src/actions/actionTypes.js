@@ -10,7 +10,7 @@ export const AJAX_CALL_ERROR = 'AJAX_CALL_ERROR';
 
 // Time boundry book keeping
 export const SET_TIME_BOUNDRY = 'SET_TIME_BOUNDRY';
-
+export const SET_OVERALL_TIME_BOUNDRIES = 'SET_OVERALL_TIME_BOUNDRIES'
 
 
 

@@ -6,6 +6,8 @@ import UsersInCore from '../components/UsersInCore';
 import UserDropdown from '../components/UserDropdown';
 import { Container, Row, Col, Card } from 'reactstrap';
 import UserIsAlreadyInCore from '../components/UserIsAlreadyInCore';
+import UserTransactionCounter from '../components/UserTransactionCounter';
+import TimeTesting from '../components/TimeTesting';
 
 
 class LogUsersInToCore extends React.Component {
@@ -48,9 +50,11 @@ class LogUsersInToCore extends React.Component {
     }
 
     relogInUserAlreadyInCore() {
+        let enteringPerson = this.props.users.filter(user => user.initials === this.state.selectedUser)[0];
+        console.log(enteringPerson);
         let newEntryTransaction = {
-            initials:this.state.selectedUser,
-            team:'n',
+            initials:enteringPerson.initials,
+            team:enteringPerson.team,
             entrytimestamp:Date.now()
         }
         let existingTransactionID = {
@@ -58,12 +62,11 @@ class LogUsersInToCore extends React.Component {
         }
         this.props.transactionActions.clearExistingEntry(existingTransactionID);
         this.props.transactionActions.logNewEntry(newEntryTransaction);
-        let timePeriod = this.state.timeBoundry;
+        let timePeriod = this.props.timeBoundry;
         this.props.transactionActions.getTransactionsInTimePeriod(timePeriod);
     }
 
     render() {
-        let usersInCore = this.props.transactions.filter(transaction => transaction.exittimestamp === null);
         let knownInitials = this.props.users.map(user => user.initials);
         return(
             <div>
@@ -92,6 +95,12 @@ class LogUsersInToCore extends React.Component {
                                         <Row>
                                             <Col md="12">
                                                 {this.state.selectedUserIsInCore ? <UserIsAlreadyInCore initials = {this.state.selectedUser} logInNewEntry = {this.relogInUserAlreadyInCore}/>: ""}
+                                                <UserTransactionCounter 
+                                                    transactions = {this.props.transactions}
+                                                    user = {this.state.selectedUser}
+                                                    timePeriod = {this.props.timeBoundry}
+                                                />
+                                                <TimeTesting />
                                             </Col>
                                         </Row>
                                 </Card>
@@ -104,7 +113,7 @@ class LogUsersInToCore extends React.Component {
                                 <Row>
                                     <Col md="1"></Col>
                                     <Col md="10">
-                                    <UsersInCore users = {usersInCore}/>
+                                    <UsersInCore transactions = {this.props.transactions} />
                                     </Col>
                                     <Col md="1"></Col>
                                 </Row>
@@ -133,4 +142,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogUsersInToCore); //mapDispatchToProps is omitted so connect injects dispatch (referenced as this.props.dispatch)
+export default connect(mapStateToProps, mapDispatchToProps)(LogUsersInToCore); 

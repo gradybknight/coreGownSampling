@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'reactstrap';
 import moment from 'moment'
 
-export default class UsersInCore extends React.Component {
+export default class UsersInCoreAllTransactions extends React.Component {
   render() {
     let usersInCore = this.props.transactions.filter(transaction => transaction.exittimestamp === null);
     return (
