@@ -36,6 +36,7 @@ export function getWeekTimeBoundries(timeValue) {
         let lowerPlaceholder = moment(selectedDate).subtract(7,'days');
         let lowerBoundry = moment().set({
             'year': lowerPlaceholder.get('year'),
+            'months':lowerPlaceholder.get('months'),
             'date': lowerPlaceholder.get('date'),
             'hour':6,
             'minute':0,
@@ -45,6 +46,7 @@ export function getWeekTimeBoundries(timeValue) {
         let upperBoundry = moment().set({
             'year': selectedDate.get('year'),
             'date': selectedDate.get('date'),
+            'months': selectedDate.get('months'),
             'hour':6,
             'minute':0,
             'second':0,
@@ -62,6 +64,7 @@ export function getWeekTimeBoundries(timeValue) {
         let upperPlaceholder = moment(selectedDate).add(dayOfWeekAdder, 'days');
         let lowerBoundry = moment().set({
             'year': lowerPlaceholder.get('year'),
+            'monhts':lowerPlaceholder.get('months'),
             'date': lowerPlaceholder.get('date'),
             'hour':6,
             'minute':0,
@@ -70,6 +73,7 @@ export function getWeekTimeBoundries(timeValue) {
         });
         let upperBoundry = moment().set({
             'year': upperPlaceholder.get('year'),
+            'monhts':lowerPlaceholder.get('months'),
             'date': upperPlaceholder.get('date'),
             'hour':6,
             'minute':0,

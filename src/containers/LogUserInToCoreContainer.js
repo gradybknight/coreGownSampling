@@ -100,7 +100,7 @@ class LogUsersInToCore extends React.Component {
                                                     user = {this.state.selectedUser}
                                                     timePeriod = {this.props.timeBoundry}
                                                 />
-                                                <TimeTesting />
+                                                <TimeTesting transactions = {this.props.transactions}/>
                                             </Col>
                                         </Row>
                                 </Card>
