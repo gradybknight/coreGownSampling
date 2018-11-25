@@ -76,3 +76,23 @@ export function clearExistingEntry(existingTransactionID){
             });
     };
 };
+
+export function logExitSuccess(payload) {
+    return ({type: types.LOG_EXIT_SUCCESS, payload});
+}
+export function logExit(newExitTransaction) {
+    return function (dispatch) {
+        dispatch(beginAjaxCall());
+        console.log('called new entry procedure')
+        axios.post('http://50.19.1.144:3000/newexit', newExitTransaction)
+            .then(function (response) {
+                console.log('response from new entry')
+                let payload = response.data;
+                dispatch(logExitSuccess(payload));
+            })
+            .catch(error => {
+                dispatch(ajaxCallError());
+                throw(error);
+            });
+    }; 
+};

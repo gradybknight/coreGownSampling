@@ -21,6 +21,7 @@ class ExitCore extends React.Component {
         this.updateSelection = this.updateSelection.bind(this);
         this.clickedGown = this.clickedGown.bind(this);
         this.clickedGloves = this.clickedGloves.bind(this);
+        this.exitTheCore = this.exitTheCore.bind(this)
     }   
 
     updateSelection(event) {
@@ -36,17 +37,17 @@ class ExitCore extends React.Component {
     }
 
     exitTheCore() {
-        let usersTeam = this.props.filter(user => user.initials === this.state.selectedUser)[0].team;
-        let exitInformation = {
+        let exitTransaction = {
             id:this.state.selectedUsersEntryTransactionID,
             initials:this.state.selectedUser,
-            team:usersTeam,
             exittimestamp:Date.now(),
             gown:0,
             glove:0
         }
-        if (this.state.selectedGownSamples) { exitInformation.gown = 1 };
-        if (this.state.selectedGloveSamples) { exitInformation.glove = 1 };
+        if (this.state.selectedGownSamples) { exitTransaction.gown = 1 };
+        if (this.state.selectedGloveSamples) { exitTransaction.glove = 1 };
+        console.log(exitTransaction);
+        this.props.transactionActions.logExit(exitTransaction);
     }
 
     clickedGown() {
