@@ -6,8 +6,7 @@ import UsersInCore from '../components/UsersInCore';
 import UserDropdown from '../components/UserDropdown';
 import { Container, Row, Col, Card } from 'reactstrap';
 import UserIsAlreadyInCore from '../components/UserIsAlreadyInCore';
-import UserTransactionCounter from '../components/UserTransactionCounter';
-import TimeTesting from '../components/TimeTesting';
+import UserValidNewCoreEntry from '../components/UserValidNewCoreEntry';
 
 
 class LogUsersInToCore extends React.Component {
@@ -21,6 +20,7 @@ class LogUsersInToCore extends React.Component {
         this.updateSelection = this.updateSelection.bind(this);
         this.isSelectedUserInCore = this.isSelectedUserInCore.bind(this);
         this.relogInUserAlreadyInCore = this.relogInUserAlreadyInCore.bind(this);
+        this.normalNewEntry = this.normalNewEntry.bind(this);
 
     }   
 
@@ -51,7 +51,6 @@ class LogUsersInToCore extends React.Component {
 
     relogInUserAlreadyInCore() {
         let enteringPerson = this.props.users.filter(user => user.initials === this.state.selectedUser)[0];
-        console.log(enteringPerson);
         let newEntryTransaction = {
             initials:enteringPerson.initials,
             team:enteringPerson.team,
@@ -61,6 +60,18 @@ class LogUsersInToCore extends React.Component {
             id:this.state.selectedUsersEntryTransactionID
         }
         this.props.transactionActions.clearExistingEntry(existingTransactionID);
+        this.props.transactionActions.logNewEntry(newEntryTransaction);
+        let timePeriod = this.props.timeBoundry;
+        this.props.transactionActions.getTransactionsInTimePeriod(timePeriod);
+    }
+
+    normalNewEntry() {
+        let enteringPerson = this.props.users.filter(user => user.initials === this.state.selectedUser)[0];
+        let newEntryTransaction = {
+            initials:enteringPerson.initials,
+            team:enteringPerson.team,
+            entrytimestamp:Date.now()
+        }
         this.props.transactionActions.logNewEntry(newEntryTransaction);
         let timePeriod = this.props.timeBoundry;
         this.props.transactionActions.getTransactionsInTimePeriod(timePeriod);
@@ -94,13 +105,14 @@ class LogUsersInToCore extends React.Component {
                                 <Card>
                                         <Row>
                                             <Col md="12">
-                                                {this.state.selectedUserIsInCore ? <UserIsAlreadyInCore initials = {this.state.selectedUser} logInNewEntry = {this.relogInUserAlreadyInCore}/>: ""}
-                                                <UserTransactionCounter 
-                                                    transactions = {this.props.transactions}
-                                                    user = {this.state.selectedUser}
-                                                    timePeriod = {this.props.timeBoundry}
-                                                />
-                                                <TimeTesting transactions = {this.props.transactions}/>
+                                                {this.state.selectedUser === '' ? 
+                                                    <div></div> : 
+                                                    <div>
+                                                        {this.state.selectedUserIsInCore ? 
+                                                        <UserIsAlreadyInCore initials = {this.state.selectedUser} logInNewEntry = {this.relogInUserAlreadyInCore}/>: 
+                                                        <UserValidNewCoreEntry transactions = {this.props.transactions} initials = {this.state.selectedUser} logInNewEntry = {this.normalNewEntry} timeBoundry = {this.props.timeBoundry}/>}
+                                                    </div>}
+                                                
                                             </Col>
                                         </Row>
                                 </Card>

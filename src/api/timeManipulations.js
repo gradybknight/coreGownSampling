@@ -30,14 +30,12 @@ export function getShiftTimeBoundries(timeValue) { // returns time bounds as num
 }
 
 export function getWeekTimeBoundries(timeValue) {
-    console.log(timeValue);
     let selectedDate = moment(timeValue);
     let sixHundred = moment({hour: 6, minute: 0, seconds: 0});
     let weekTimeBoundries = {
         lowerBoundry:'',
         upperBoundry:''
     };
-    console.log(`selected date: ${selectedDate.format("DD-MMM-YYYY HH:mm:ss")}`);
 
     if (selectedDate.isBefore(sixHundred) && selectedDate.day() === 0) {
         console('before six');
@@ -65,7 +63,6 @@ export function getWeekTimeBoundries(timeValue) {
         weekTimeBoundries.upperBoundry = upperBoundry.unix()*1000;
         return weekTimeBoundries;
     } else {
-        console.log('after six');
         // for anything after 0600 monday, set lower bound to 0600 monday of week
         //    and upper bound to 0600 of next monday
         let dayOfWeek = moment(selectedDate).day();
@@ -78,7 +75,6 @@ export function getWeekTimeBoundries(timeValue) {
             dayOfWeekSubtractor = moment(selectedDate).day()-1;
             dayOfWeekAdder = 7-dayOfWeekSubtractor;
         }
-        console.log(`subtractor: ${dayOfWeekSubtractor}, adder: ${dayOfWeekAdder}`)
         let lowerPlaceholder = moment(selectedDate).subtract(dayOfWeekSubtractor, 'days');
         let upperPlaceholder = moment(selectedDate).add(dayOfWeekAdder, 'days');
         let lowerBoundry = moment().set({

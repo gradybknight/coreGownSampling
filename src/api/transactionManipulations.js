@@ -1,5 +1,4 @@
 import moment from 'moment';
-
 // Business rules
 // A) Glove sample every day:
 //    1. countOfGloveSamplesInTimePeriodForUser(pass in shiftBoundry as timePeriod)
@@ -8,13 +7,11 @@ import moment from 'moment';
 //        a. countOfEntriesByDay(pass in weekBoundry)
 //        b. .numberOfEntryDays(array from 1a) --> number of entries
 //        c. countOfGloveSamplesInTimePeriodForUser(pass in weekBoundry) --> number of gown samples taken
-
 export function allTransactionsForUserInTimePeriod(initials, transactions, timePeriod) {  //returns array of transactions
     let matchingTransactions = transactions.filter(transaction => transaction.initials === initials)
                                             .filter(transaction => (transaction.entrytimestamp >= timePeriod.lowerBoundry && transaction.entrytimestamp < timePeriod.upperBoundry));
     return matchingTransactions;
 };
-
 export function userIsCurrentlyLoggedAsInCore(initials, transactions) { //returns boolean
     let matchingTransactions = transactions.filter(transaction => transaction.initials === initials)
                                             .filter(transaction => transaction.exittimestamp === null);
@@ -24,14 +21,12 @@ export function userIsCurrentlyLoggedAsInCore(initials, transactions) { //return
         return false;
     }
 }
-
 export function usersInCore(transactions) { //returns array of initials
     let usersInCore = transactions.filter(transaction => transaction.exittimestamp === null)
                                     .map(transaction => transaction.initials);
     return usersInCore;
 
 }
-
 export function countOfGownSamplesInTimePeriodForUser(initials, transactions, timePeriod) { //returns count as integer
     let gownCount = 0;
     allTransactionsForUserInTimePeriod(initials, transactions, timePeriod).forEach(transaction =>{
@@ -39,15 +34,14 @@ export function countOfGownSamplesInTimePeriodForUser(initials, transactions, ti
     });
     return gownCount;
 }
-
 export function countOfGloveSamplesInTimePeriodForUser(initials, transactions, timePeriod) { //returns count as integer
     var gloveCount = 0;
     allTransactionsForUserInTimePeriod(initials, transactions, timePeriod).forEach(transaction =>{
         gloveCount = gloveCount + transaction.glove;
+        console.log(transaction);
     });
     return gloveCount;
 }
-
 export function truncateTimeFromMomentObjectAndReturnMoment(momentTimeObject) { // moment.js object
     let placeholder = momentTimeObject.toObject();
     let returnedMomentTimeObject = moment().set({
@@ -61,27 +55,20 @@ export function truncateTimeFromMomentObjectAndReturnMoment(momentTimeObject) { 
     });
     return returnedMomentTimeObject;
 }
-
 export function countOfEntriesByDay(initials, transactions, timePeriod) { // array of {date as epochTime, entryCount}
-    // console.log(transactions);
     let usersTransactions = allTransactionsForUserInTimePeriod(initials,transactions, timePeriod);
-    // console.log(usersTransactions);
     let minDay = truncateTimeFromMomentObjectAndReturnMoment(moment(timePeriod.lowerBoundry));
     let maxDay = truncateTimeFromMomentObjectAndReturnMoment(moment(timePeriod.upperBoundry));
     let numberOfDaysInTimePeriod = maxDay.diff(minDay,"days");
     let returnedArray = []
-    // console.log(`min day: ${minDay.format("DD-MMM-YYYY")} || max day: ${maxDay.format("DD-MMM-YYYY")}`)
     for (let i = 0; i <= numberOfDaysInTimePeriod; i++) {
         // moment objects are muteable.  holder date is a temp holder which gets mutated
         let holderDay = truncateTimeFromMomentObjectAndReturnMoment(minDay);
         let testedDate = holderDay.add(i,'days');
-        // console.log(`tested date: ${testedDate.format("DD-MMM-YYYY")} || minDay: ${minDay.format("DD-MMM-YYYY")}`)
         let counter = 0;
         let dateSummaryObject = {dateAsEpoch:'',entries:0}
         usersTransactions.forEach(transaction => {
-            // console.log('got here')
             let truncatedTransactionDate = truncateTimeFromMomentObjectAndReturnMoment(moment(transaction.entrytimestamp));
-            // console.log(`tested date: ${testedDate.format("DD-MMM-YYYY")} || transaction date: ${truncatedTransactionDate.format("DD-MMM-YYYY")}`)
             if (testedDate.isSame(truncatedTransactionDate)) {
                 counter++;
             } 
@@ -91,10 +78,8 @@ export function countOfEntriesByDay(initials, transactions, timePeriod) { // arr
         dateSummaryObject.entries = counter;
         returnedArray.push(dateSummaryObject);
     }
-    // console.log(returnedArray);
     return returnedArray;
 }
-
 export function numberOfEntryDays(arrayFromCountOfEntriesByDay) { // returns count of number of days entering core
     let entryDayCounter = 0;
     arrayFromCountOfEntriesByDay.forEach(entry => {
@@ -103,4 +88,18 @@ export function numberOfEntryDays(arrayFromCountOfEntriesByDay) { // returns cou
         }
     });
     return entryDayCounter;
+}
+export function forTimePointAndUserIsThereGloveSample(initials, transactions, timePoint) { //returns boolean
+    let timePointAsMoment = moment(timePoint);
+    let timePeriod = {
+        lowerBoundry: timePointAsMoment.subtract(12,'hours').unix()*1000,
+        upperBoundry: timePointAsMoment.add(12,'hours').unix()*1000
+    }
+    let usersTransactionsWithGloveSamples = allTransactionsForUserInTimePeriod(initials,transactions, timePeriod).filter(transaction => transaction.glove > 0);
+    if (usersTransactionsWithGloveSamples.length > 0) {
+        return true
+    } else {
+        return false
+    }
+    
 }
