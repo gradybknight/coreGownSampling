@@ -9,7 +9,7 @@ export default class UserIsAlreadyInCore extends React.Component {
         <div>
             <h3>{this.props.initials} is already in the core</h3> 
             <Button 
-                color="warning"
+                color="danger"
                 onClick={this.props.logInNewEntry}
             >
                 Clear existing entry and log new

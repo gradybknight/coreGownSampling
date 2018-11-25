@@ -3,10 +3,10 @@ import './App.css';
 import configureStore from './store/configureStore';
 import {Provider} from 'react-redux';
 import {getAllKnownUsers} from './actions/userActions';
-import LogUserInToCoreContainer from './containers/LogUserInToCoreContainer';
 import { setOverallTimeBoundries } from './actions/timeBoundryActions';
 import { getTransactionsInTimePeriod } from './actions/transactionActions';
 import * as timeManipulations from './api/timeManipulations';
+import TabBarContainer from './containers/TabBarContainer';
 
 const store = configureStore();
 store.dispatch(getAllKnownUsers());
@@ -22,7 +22,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="App">
-          <LogUserInToCoreContainer />
+          <TabBarContainer />
         </div>
       </Provider>
     );
