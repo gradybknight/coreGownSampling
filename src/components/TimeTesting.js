@@ -14,7 +14,7 @@ export default class TimeTesting extends React.Component {
         //     upperBoundry:1543014000000
         // };
         let holder = transactionManipulations.countOfEntriesByDay('gyk',this.props.transactions, timePeriod);
-        // console.log(holder);
+        console.log(holder);
         // console.log(transactionManipulations.numberOfEntryDays(holder));
         return (
             <div>

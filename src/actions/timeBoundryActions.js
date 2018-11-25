@@ -10,6 +10,10 @@ export function setTimeBoundry(lowerBoundry, upperBoundry) {
 
 export function setOverallTimeBoundries(weekBoundry, shiftBoundry) {
     let payload = {
+        lowerBoundryReadable:weekBoundry.lowerBoundryReadable,
+        upperBoundryReadable:weekBoundry.upperBoundryReadable,
+        shiftLowerBoundryReadable:shiftBoundry.lowerBoundryReadable,
+        shiftUpperBoundryReadable:shiftBoundry.upperBoundryReadable,
         lowerBoundry: weekBoundry.lowerBoundry,
         upperBoundry: weekBoundry.upperBoundry,
         shiftLowerBoundry: shiftBoundry.lowerBoundry,

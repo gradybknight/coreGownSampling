@@ -2,7 +2,7 @@ import moment from 'moment';
 
 export function getShiftTimeBoundries(timeValue) { // returns time bounds as number
     let sixHundred = moment({hour: 6, minute: 0, seconds: 0}); 
-    let eighteenHundred = moment({hour:18, minute:0, seconds:0});
+    let eighteenHundred = moment({hour: 18, minute:0, seconds:0});
     let selectedTime = moment(timeValue);
     let shiftTimeBoundries = {
             lowerBoundry:'',
@@ -11,27 +11,36 @@ export function getShiftTimeBoundries(timeValue) { // returns time bounds as num
     if (selectedTime < sixHundred) {
         shiftTimeBoundries.lowerBoundry = eighteenHundred.subtract(1, 'days').unix()*1000;
         shiftTimeBoundries.upperBoundry = sixHundred.unix()*1000;
+        shiftTimeBoundries.lowerBoundryReadable = moment(shiftTimeBoundries.lowerBoundry).format('DD-MMM-YYYY HH:mm:ss');
+        shiftTimeBoundries.upperBoundryReadable = moment(shiftTimeBoundries.upperBoundry).format('DD-MMM-YYYY HH:mm:ss');
         return shiftTimeBoundries;
     } else if (selectedTime >= sixHundred && selectedTime < eighteenHundred ) {
         shiftTimeBoundries.lowerBoundry = sixHundred.unix()*1000;
         shiftTimeBoundries.upperBoundry = eighteenHundred.unix()*1000;
+        shiftTimeBoundries.lowerBoundryReadable = moment(shiftTimeBoundries.lowerBoundry).format('DD-MMM-YYYY HH:mm:ss');
+        shiftTimeBoundries.upperBoundryReadable = moment(shiftTimeBoundries.upperBoundry).format('DD-MMM-YYYY HH:mm:ss');
         return shiftTimeBoundries;
     } else {
         shiftTimeBoundries.lowerBoundry = eighteenHundred.unix()*1000;
         shiftTimeBoundries.upperBoundry = sixHundred.add(1, 'days').unix()*1000;
+        shiftTimeBoundries.lowerBoundryReadable = moment(shiftTimeBoundries.lowerBoundry).format('DD-MMM-YYYY HH:mm:ss');
+        shiftTimeBoundries.upperBoundryReadable = moment(shiftTimeBoundries.upperBoundry).format('DD-MMM-YYYY HH:mm:ss');
         return shiftTimeBoundries;
     }
 }
 
 export function getWeekTimeBoundries(timeValue) {
+    console.log(timeValue);
     let selectedDate = moment(timeValue);
     let sixHundred = moment({hour: 6, minute: 0, seconds: 0});
     let weekTimeBoundries = {
         lowerBoundry:'',
         upperBoundry:''
     };
-    
+    console.log(`selected date: ${selectedDate.format("DD-MMM-YYYY HH:mm:ss")}`);
+
     if (selectedDate.isBefore(sixHundred) && selectedDate.day() === 0) {
+        console('before six');
         // this is for before 06:00 on mondays.  Need to set week to previous week
         let lowerPlaceholder = moment(selectedDate).subtract(7,'days');
         let lowerBoundry = moment().set({
@@ -56,10 +65,20 @@ export function getWeekTimeBoundries(timeValue) {
         weekTimeBoundries.upperBoundry = upperBoundry.unix()*1000;
         return weekTimeBoundries;
     } else {
+        console.log('after six');
         // for anything after 0600 monday, set lower bound to 0600 monday of week
         //    and upper bound to 0600 of next monday
-        let dayOfWeekSubtractor = moment(selectedDate).day()-1;
-        let dayOfWeekAdder = 7-dayOfWeekSubtractor;
+        let dayOfWeek = moment(selectedDate).day();
+        let dayOfWeekSubtractor = {};
+        let dayOfWeekAdder = {};
+        if (dayOfWeek === 0) {
+            dayOfWeekSubtractor=6;
+            dayOfWeekAdder = 1;
+        } else {
+            dayOfWeekSubtractor = moment(selectedDate).day()-1;
+            dayOfWeekAdder = 7-dayOfWeekSubtractor;
+        }
+        console.log(`subtractor: ${dayOfWeekSubtractor}, adder: ${dayOfWeekAdder}`)
         let lowerPlaceholder = moment(selectedDate).subtract(dayOfWeekSubtractor, 'days');
         let upperPlaceholder = moment(selectedDate).add(dayOfWeekAdder, 'days');
         let lowerBoundry = moment().set({
@@ -82,6 +101,8 @@ export function getWeekTimeBoundries(timeValue) {
         });
         weekTimeBoundries.lowerBoundry = lowerBoundry.unix()*1000;
         weekTimeBoundries.upperBoundry = upperBoundry.unix()*1000;
+        weekTimeBoundries.lowerBoundryReadable = lowerBoundry.format('DD-MMM-YYYY HH:mm:ss');
+        weekTimeBoundries.upperBoundryReadable = upperBoundry.format('DD-MMM-YYYY HH:mm:ss')
         return weekTimeBoundries;
     }
 }

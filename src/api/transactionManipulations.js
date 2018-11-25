@@ -63,32 +63,35 @@ export function truncateTimeFromMomentObjectAndReturnMoment(momentTimeObject) { 
 }
 
 export function countOfEntriesByDay(initials, transactions, timePeriod) { // array of {date as epochTime, entryCount}
+    // console.log(transactions);
     let usersTransactions = allTransactionsForUserInTimePeriod(initials,transactions, timePeriod);
+    // console.log(usersTransactions);
     let minDay = truncateTimeFromMomentObjectAndReturnMoment(moment(timePeriod.lowerBoundry));
     let maxDay = truncateTimeFromMomentObjectAndReturnMoment(moment(timePeriod.upperBoundry));
     let numberOfDaysInTimePeriod = maxDay.diff(minDay,"days");
     let returnedArray = []
-    console.log(numberOfDaysInTimePeriod);
+    // console.log(`min day: ${minDay.format("DD-MMM-YYYY")} || max day: ${maxDay.format("DD-MMM-YYYY")}`)
     for (let i = 0; i <= numberOfDaysInTimePeriod; i++) {
-
-        // ******************************************************** //
-        // moment objects are muteable.  need to fix as .add is f'd //
-        // ******************************************************** //
-
-        let testedDate = minDay.add(i,'days');
-        console.log(testedDate);
+        // moment objects are muteable.  holder date is a temp holder which gets mutated
+        let holderDay = truncateTimeFromMomentObjectAndReturnMoment(minDay);
+        let testedDate = holderDay.add(i,'days');
+        // console.log(`tested date: ${testedDate.format("DD-MMM-YYYY")} || minDay: ${minDay.format("DD-MMM-YYYY")}`)
         let counter = 0;
         let dateSummaryObject = {dateAsEpoch:'',entries:0}
         usersTransactions.forEach(transaction => {
+            // console.log('got here')
             let truncatedTransactionDate = truncateTimeFromMomentObjectAndReturnMoment(moment(transaction.entrytimestamp));
+            // console.log(`tested date: ${testedDate.format("DD-MMM-YYYY")} || transaction date: ${truncatedTransactionDate.format("DD-MMM-YYYY")}`)
             if (testedDate.isSame(truncatedTransactionDate)) {
                 counter++;
             } 
         });
         dateSummaryObject.dateAsEpoch = testedDate.unix()*1000;
+        dateSummaryObject.dateFormated = testedDate.format("DD-MMM-YYYY");
         dateSummaryObject.entries = counter;
         returnedArray.push(dateSummaryObject);
     }
+    // console.log(returnedArray);
     return returnedArray;
 }
 
