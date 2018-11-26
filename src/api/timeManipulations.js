@@ -43,7 +43,7 @@ export function getWeekTimeBoundries(timeValue) {
         let lowerPlaceholder = moment(selectedDate).subtract(7,'days');
         let lowerBoundry = moment().set({
             'year': lowerPlaceholder.get('year'),
-            'months':lowerPlaceholder.get('months'),
+            'months':lowerPlaceholder.get('months')+1,
             'date': lowerPlaceholder.get('date'),
             'hour':6,
             'minute':0,
@@ -53,7 +53,7 @@ export function getWeekTimeBoundries(timeValue) {
         let upperBoundry = moment().set({
             'year': selectedDate.get('year'),
             'date': selectedDate.get('date'),
-            'months': selectedDate.get('months'),
+            'months': selectedDate.get('months')+1,
             'hour':6,
             'minute':0,
             'second':0,
@@ -75,6 +75,7 @@ export function getWeekTimeBoundries(timeValue) {
             dayOfWeekSubtractor = moment(selectedDate).day()-1;
             dayOfWeekAdder = 7-dayOfWeekSubtractor;
         }
+        console.log(moment(selectedDate).toObject());
         let lowerPlaceholder = moment(selectedDate).subtract(dayOfWeekSubtractor, 'days');
         let upperPlaceholder = moment(selectedDate).add(dayOfWeekAdder, 'days');
         let lowerBoundry = moment().set({
@@ -88,7 +89,7 @@ export function getWeekTimeBoundries(timeValue) {
         });
         let upperBoundry = moment().set({
             'year': upperPlaceholder.get('year'),
-            'months':lowerPlaceholder.get('months'),
+            'months':lowerPlaceholder.get('months')+1,
             'date': upperPlaceholder.get('date'),
             'hour':6,
             'minute':0,
@@ -98,7 +99,8 @@ export function getWeekTimeBoundries(timeValue) {
         weekTimeBoundries.lowerBoundry = lowerBoundry.unix()*1000;
         weekTimeBoundries.upperBoundry = upperBoundry.unix()*1000;
         weekTimeBoundries.lowerBoundryReadable = lowerBoundry.format('DD-MMM-YYYY HH:mm:ss');
-        weekTimeBoundries.upperBoundryReadable = upperBoundry.format('DD-MMM-YYYY HH:mm:ss')
+        weekTimeBoundries.upperBoundryReadable = upperBoundry.format('DD-MMM-YYYY HH:mm:ss');
+        console.log(weekTimeBoundries);
         return weekTimeBoundries;
     }
 }
